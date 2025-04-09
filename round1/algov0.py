@@ -138,13 +138,13 @@ PARAMS = {
         "clear_width": 0,
         "disregard_edge": 1,
         "join_edge": 2,
-        "default_edge": 4,
-        "soft_position_limit": 40,  # 30
+        "default_edge": 3,
+        "soft_position_limit": 46,  # 30
     },
     Product.KELP: {
         "take_width": 2,
         "clear_width": 0,
-        "prevent_adverse": True,
+        "prevent_adverse": False,
         "adverse_volume": 15,  # 20 - doesn't work as great
         "reversion_beta": -0.18,  # -0.2184
         "disregard_edge": 2,
@@ -154,11 +154,11 @@ PARAMS = {
     },
     Product.SQUID_INK: {
         "take_width": 2,
-        "clear_width": 0,
-        "prevent_adverse": True,
+        "clear_width": 1,
+        "prevent_adverse": False,
         "adverse_volume": 15,
-        "reversion_beta": -0.2264,
-        "disregard_edge": 1,
+        "reversion_beta": -0.228,
+        "disregard_edge": 2,
         "join_edge": 0,
         "default_edge": 1,
     }
@@ -198,12 +198,10 @@ class Trader:
                     )
                     if quantity > 0:
                         orders.append(Order(product, best_ask, quantity))
-                        if quantity > 0:
-                            orders.append(Order(product, best_ask, quantity))
-                            buy_order_volume += quantity
-                            order_depth.sell_orders[best_ask] += quantity
-                            if order_depth.sell_orders[best_ask] == 0:
-                                del order_depth.sell_orders[best_ask]
+                        buy_order_volume += quantity
+                        order_depth.sell_orders[best_ask] += quantity
+                        if order_depth.sell_orders[best_ask] == 0:
+                            del order_depth.sell_orders[best_ask]
 
         if len(order_depth.buy_orders) != 0:
             best_bid = max(order_depth.buy_orders.keys())
