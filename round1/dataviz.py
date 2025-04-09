@@ -18,16 +18,11 @@ df_ink_3 = df3.groupby("product").get_group("SQUID_INK")[["timestamp","mid_price
 ink_data1 = df_ink["mid_price"].to_numpy()
 ink_data2 = df_ink_2["mid_price"].to_numpy()
 ink_data3 = df_ink_3["mid_price"].to_numpy()
-ink_data = np.concatenate((ink_data1,ink_data2,ink_data3),axis=None)
-print(np.mean(ink_data))
-r_vol = []
-for i in range(100,len(ink_data)+1):
-    data = ink_data[i-100:i]
-    abs_diff = np.abs(np.diff(data))
-    abs_diff = np.array(list(filter(lambda x: x,abs_diff)))
-    log_diff = np.log(abs_diff)
-    realised_vol = math.sqrt(sum(map(lambda x:x**2,log_diff)))
-    r_vol.append(realised_vol)
-print(r_vol)
-plt.plot(r_vol)
+print(min(ink_data2))
+ink_data = np.concatenate((ink_data3,ink_data2,ink_data1),axis=None)
+max_diff = max(np.diff(ink_data))
+for i,e in enumerate(np.diff(ink_data)):
+    if e == max_diff:
+        print(i)
+plt.plot(ink_data)
 plt.show()
