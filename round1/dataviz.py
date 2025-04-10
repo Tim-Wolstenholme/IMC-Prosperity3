@@ -19,6 +19,8 @@ ink_data1 = df_ink["mid_price"].to_numpy()
 ink_data2 = df_ink_2["mid_price"].to_numpy()
 ink_data3 = df_ink_3["mid_price"].to_numpy()
 print(min(ink_data2))
+print(max(np.diff(ink_data1)))
+print(max(np.diff(ink_data3)))
 ink_data = np.concatenate((ink_data3,ink_data2,ink_data1),axis=None)
 max_diff = max(np.diff(ink_data))
 for i,e in enumerate(np.diff(ink_data)):
