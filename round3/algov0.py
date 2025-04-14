@@ -221,6 +221,8 @@ PARAMS = {
     "strike": 10000, # this might be silly but profits are much higher with this strike 
                      # I do not know why that is the case for all of them
                      # You can try if you want the actual strike but it makes a loss
+                     # to note I've uploaded this exactly after I have managed to get the code to run
+                     # I will look into this now along with mean-reverting deltas for selected vouchers
     "starting_time_to_expiry": 3 / 7,
     "std_window": 6,
     "z_score_threshold": 21,
