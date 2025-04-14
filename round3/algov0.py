@@ -271,17 +271,26 @@ PICNIC2_WEIGHTS = {
     Product.CROISSANT: 4,
     Product.JAMS: 2}
 
-from math import log, sqrt, exp
-from statistics import NormalDist
+from math import log, sqrt, exp, erf, pi
+#from statistics import NormalDist
+
 
 class BlackScholes:
+    @staticmethod
+    def NormalDistcdf(x: float) -> float:
+        return 0.5 * (1 + erf(x / math.sqrt(2)))
+    @staticmethod
+    def NormalDistpdf(x: float) -> float:
+        return (1 / math.sqrt(2 * math.pi)) * math.exp(-0.5 * x * x)
+    
     @staticmethod
     def black_scholes_call(spot, strike, time_to_expiry, volatility):
         d1 = (
             log(spot) - log(strike) + (0.5 * volatility * volatility) * time_to_expiry
         ) / (volatility * sqrt(time_to_expiry))
         d2 = d1 - volatility * sqrt(time_to_expiry)
-        call_price = spot * NormalDist().cdf(d1) - strike * NormalDist().cdf(d2)
+        call_price = (spot * BlackScholes.NormalDistcdf(d1) - 
+                      strike * BlackScholes.NormalDistcdf(d2))
         return call_price
     
     @staticmethod
@@ -290,7 +299,7 @@ class BlackScholes:
             volatility * sqrt(time_to_expiry)
         )
         d2 = d1 - volatility * sqrt(time_to_expiry)
-        put_price = strike * NormalDist().cdf(-d2) - spot * NormalDist().cdf(-d1)
+        put_price = strike * BlackScholes.NormalDistcdf(-d2) - spot * BlackScholes.NormalDistcdf(-d1)
         return put_price
     
     @staticmethod
@@ -298,14 +307,14 @@ class BlackScholes:
         d1 = (
             log(spot) - log(strike) + (0.5 * volatility * volatility) * time_to_expiry
         ) / (volatility * sqrt(time_to_expiry))
-        return NormalDist().cdf(d1)
+        return BlackScholes.NormalDistcdf(d1)
     
     @staticmethod
     def gamma(spot, strike, time_to_expiry, volatility):
         d1 = (
             log(spot) - log(strike) + (0.5 * volatility * volatility) * time_to_expiry
         ) / (volatility * sqrt(time_to_expiry))
-        return NormalDist().pdf(d1) / (spot * volatility * sqrt(time_to_expiry))
+        return BlackScholes.NormalDistpdf(d1) / (spot * volatility * sqrt(time_to_expiry))
     
     @staticmethod
     def vega(spot, strike, time_to_expiry, volatility):
@@ -317,7 +326,7 @@ class BlackScholes:
         # print(f"spot: {spot}")
         # print(f"strike: {strike}")
         # print(f"time: {time_to_expiry}")
-        return NormalDist().pdf(d1) * (spot * sqrt(time_to_expiry)) / 100
+        return BlackScholes.NormalDistpdf(d1) * (spot * sqrt(time_to_expiry)) / 100
     
     @staticmethod
     def implied_volatility(
